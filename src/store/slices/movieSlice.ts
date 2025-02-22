@@ -1,75 +1,72 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { movieApi } from "../../services/api";
-import type {
-  Movie,
-  MovieDetail,
-  SearchParams,
-  DetailParams,
-} from "../../types/movie.types";
-import type { AppDispatch } from "../store";
+import { createSlice } from '@reduxjs/toolkit'
+import { movieApi } from '../../services/api'
+import type { AppDispatch, RootState } from '../store'
+import { MovieDetailType, MovieType } from '../../types/movie'
+import { SearchParamsType } from '../../types/search'
+import { MovieDetailParamsType } from '../../types/movieDetail'
 
-interface MovieState {
-  movies: Movie[];
-  selectedMovie: MovieDetail | null;
-  loading: boolean;
-  searching: boolean;
-  error: string | null;
-  totalResults: number;
+type MovieStateType = {
+  movies: MovieType[]
+  selectedMovie?: MovieDetailType
+  isLoading: boolean
+  isSearching: boolean
+  error?: string
+  totalResults: number
 }
 
-const initialState: MovieState = {
+const initialState: MovieStateType = {
   movies: [],
-  selectedMovie: null,
-  loading: false,
-  searching: false,
-  error: null,
-  totalResults: 0,
-};
+  selectedMovie: undefined,
+  isLoading: false,
+  isSearching: false,
+  error: undefined,
+  totalResults: 0
+}
 
 const movieSlice = createSlice({
-  name: "movie",
+  name: 'movie',
   initialState,
   reducers: {
-    startLoading: (state) => {
-      state.loading = true;
-      state.error = null;
+    startLoading: state => {
+      state.isLoading = true
+      state.error = undefined
     },
-    startSearching: (state) => {
-      state.searching = true;
-      state.error = null;
-      state.movies = [];
-      state.totalResults = 0;
+    startSearching: state => {
+      state.isSearching = true
+      state.error = undefined
+      state.movies = []
+      state.totalResults = 0
     },
-    stopLoading: (state) => {
-      state.loading = false;
-      state.searching = false;
+    stopLoading: state => {
+      state.isLoading = false
+      state.isSearching = false
     },
     setMovieList: (state, { payload }) => {
-      state.movies = payload.movies;
-      state.totalResults = payload.total;
-      state.loading = false;
-      state.searching = false;
+      state.movies = payload.movies
+      state.totalResults = payload.total
+      state.isLoading = false
+      state.isSearching = false
     },
     setMovie: (state, { payload }) => {
-      state.selectedMovie = payload;
-      state.loading = false;
+      state.selectedMovie = payload
+      state.isLoading = false
     },
     setError: (state, { payload }) => {
-      state.error = payload;
-      state.loading = false;
-      state.searching = false;
-      state.movies = [];
-      state.totalResults = 0;
+      state.error = payload
+      state.isLoading = false
+      state.isSearching = false
+      state.movies = []
+      state.totalResults = 0
     },
-    resetMovies: (state) => {
-      state.movies = [];
-      state.totalResults = 0;
+    resetMovies: state => {
+      state.movies = []
+      state.totalResults = 0
     },
-    resetMovie: (state) => {
-      state.selectedMovie = null;
-    },
-  },
-});
+    resetMovie: state => {
+      state.selectedMovie = undefined
+    }
+  }
+})
 
 export const {
   startLoading,
@@ -79,49 +76,62 @@ export const {
   setMovie,
   setError,
   resetMovies,
-  resetMovie,
-} = movieSlice.actions;
+  resetMovie
+} = movieSlice.actions
 
-export const searchMovies =
-  (params: SearchParams) => async (dispatch: AppDispatch) => {
-    try {
-      if (!params.page || params.page === 1) {
-        dispatch(startSearching());
-      } else {
-        dispatch(startLoading());
-      }
-
-      const data = await movieApi.search(params);
-
-      if (!data.Search?.length) {
-        return dispatch(setError("No results found"));
-      }
-
-      dispatch(
-        setMovieList({
-          movies: data.Search,
-          total: Number(data.totalResults) || 0,
-        })
-      );
-    } catch (err) {
-      dispatch(setError("Search failed"));
+export const searchMovies = (params: SearchParamsType) => async (dispatch: AppDispatch) => {
+  try {
+    if (!params.page || params.page === 1) {
+      dispatch(startSearching())
+    } else {
+      dispatch(startLoading())
     }
-  };
 
-export const getMovieDetail =
-  (params: DetailParams) => async (dispatch: AppDispatch) => {
-    try {
-      dispatch(startLoading());
-      const movie = await movieApi.getDetail(params);
+    const data = await movieApi.search(params)
 
-      if (!movie.Title) {
-        return dispatch(setError("Movie not found"));
-      }
-
-      dispatch(setMovie(movie));
-    } catch (err) {
-      dispatch(setError("Failed to get movie details"));
+    if (!data.Search?.length) {
+      return dispatch(setError('No results found'))
     }
-  };
 
-export default movieSlice.reducer;
+    dispatch(
+      setMovieList({
+        movies: data.Search,
+        total: Number(data.totalResults) || 0
+      })
+    )
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_err) {
+    dispatch(setError('Search failed'))
+  }
+}
+
+export const getMovieDetail = (params: MovieDetailParamsType) => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(startLoading())
+    const movie = await movieApi.getDetail(params)
+
+    if (!movie.Title) {
+      return dispatch(setError('Movie not found'))
+    }
+
+    dispatch(setMovie(movie))
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_err) {
+    dispatch(setError('Failed to get movie details'))
+  }
+}
+
+export const selectMovieList = (state: RootState) => ({
+  movies: state.movie.movies,
+  isSearching: state.movie.isSearching,
+  error: state.movie.error,
+  totalResults: state.movie.totalResults
+})
+
+export const selectMovie = (state: RootState) => ({
+  selectedMovie: state.movie.selectedMovie,
+  isLoading: state.movie.isLoading,
+  error: state.movie.error
+})
+
+export default movieSlice.reducer
