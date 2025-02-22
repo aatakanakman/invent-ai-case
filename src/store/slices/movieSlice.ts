@@ -12,6 +12,7 @@ interface MovieState {
   movies: Movie[];
   selectedMovie: MovieDetail | null;
   loading: boolean;
+  searching: boolean;
   error: string | null;
   totalResults: number;
 }
@@ -20,6 +21,7 @@ const initialState: MovieState = {
   movies: [],
   selectedMovie: null,
   loading: false,
+  searching: false,
   error: null,
   totalResults: 0,
 };
@@ -32,13 +34,19 @@ const movieSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
+    startSearching: (state) => {
+      state.searching = true;
+      state.error = null;
+    },
     stopLoading: (state) => {
       state.loading = false;
+      state.searching = false;
     },
     setMovieList: (state, { payload }) => {
       state.movies = payload.movies;
       state.totalResults = payload.total;
       state.loading = false;
+      state.searching = false;
     },
     setMovie: (state, { payload }) => {
       state.selectedMovie = payload;
@@ -47,6 +55,7 @@ const movieSlice = createSlice({
     setError: (state, { payload }) => {
       state.error = payload;
       state.loading = false;
+      state.searching = false;
     },
     resetMovies: (state) => {
       state.movies = [];
@@ -60,6 +69,7 @@ const movieSlice = createSlice({
 
 export const {
   startLoading,
+  startSearching,
   stopLoading,
   setMovieList,
   setMovie,
@@ -71,7 +81,12 @@ export const {
 export const searchMovies =
   (params: SearchParams) => async (dispatch: AppDispatch) => {
     try {
-      dispatch(startLoading());
+      if (!params.page || params.page === 1) {
+        dispatch(startSearching());
+      } else {
+        dispatch(startLoading());
+      }
+
       const data = await movieApi.search(params);
 
       if (!data.Search?.length) {

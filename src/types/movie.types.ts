@@ -39,9 +39,11 @@ export interface SearchResponse {
   Error?: string;
 }
 
+export type MediaType = "movie" | "series" | "episode";
+
 export interface SearchParams {
   s?: string;
-  type?: "movie" | "series" | "episode";
+  type?: MediaType;
   y?: string;
   page?: number;
 }
