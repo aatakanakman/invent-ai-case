@@ -37,6 +37,8 @@ const movieSlice = createSlice({
     startSearching: (state) => {
       state.searching = true;
       state.error = null;
+      state.movies = [];
+      state.totalResults = 0;
     },
     stopLoading: (state) => {
       state.loading = false;
@@ -56,6 +58,8 @@ const movieSlice = createSlice({
       state.error = payload;
       state.loading = false;
       state.searching = false;
+      state.movies = [];
+      state.totalResults = 0;
     },
     resetMovies: (state) => {
       state.movies = [];
@@ -90,7 +94,7 @@ export const searchMovies =
       const data = await movieApi.search(params);
 
       if (!data.Search?.length) {
-        return dispatch(setError("Arama sonucu bulunamadı"));
+        return dispatch(setError("No results found"));
       }
 
       dispatch(
@@ -100,7 +104,7 @@ export const searchMovies =
         })
       );
     } catch (err) {
-      dispatch(setError("Film araması başarısız oldu"));
+      dispatch(setError("Search failed"));
     }
   };
 
@@ -111,12 +115,12 @@ export const getMovieDetail =
       const movie = await movieApi.getDetail(params);
 
       if (!movie.Title) {
-        return dispatch(setError("Film bulunamadı"));
+        return dispatch(setError("Movie not found"));
       }
 
       dispatch(setMovie(movie));
     } catch (err) {
-      dispatch(setError("Film detayı alınamadı"));
+      dispatch(setError("Failed to get movie details"));
     }
   };
 

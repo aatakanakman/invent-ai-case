@@ -25,14 +25,14 @@ export const Pagination = ({
       <button
         onClick={() => onPageChange(1)}
         disabled={currentPage === 1}
-        className="px-3 py-1 text-gray-600 hover:bg-gray-100 disabled:text-gray-400 disabled:hover:bg-transparent"
+        className="px-3 py-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
       >
         {"<<"}
       </button>
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-3 py-1 text-gray-600 hover:bg-gray-100 disabled:text-gray-400 disabled:hover:bg-transparent"
+        className="px-3 py-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
       >
         {"<"}
       </button>
@@ -41,10 +41,10 @@ export const Pagination = ({
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`px-3 py-1 ${
+          className={`px-3 py-1 rounded transition-colors ${
             currentPage === page
-              ? "bg-blue-500 text-white"
-              : "text-gray-600 hover:bg-gray-100"
+              ? "bg-blue-600 text-white"
+              : "text-gray-400 hover:text-white hover:bg-gray-700"
           }`}
         >
           {page}
@@ -54,14 +54,14 @@ export const Pagination = ({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-3 py-1 text-gray-600 hover:bg-gray-100 disabled:text-gray-400 disabled:hover:bg-transparent"
+        className="px-3 py-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
       >
         {">"}
       </button>
       <button
         onClick={() => onPageChange(totalPages)}
         disabled={currentPage === totalPages}
-        className="px-3 py-1 text-gray-600 hover:bg-gray-100 disabled:text-gray-400 disabled:hover:bg-transparent"
+        className="px-3 py-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded disabled:opacity-50 disabled:hover:bg-transparent transition-colors"
       >
         {">>"}
       </button>

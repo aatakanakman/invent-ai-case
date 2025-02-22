@@ -8,10 +8,10 @@ interface TypeFilterProps {
 }
 
 const mediaTypes = [
-  { value: "", label: "Tüm Türler" },
-  { value: "movie", label: "Film" },
-  { value: "series", label: "Dizi" },
-  { value: "episode", label: "Bölüm" },
+  { value: "", label: "All Types" },
+  { value: "movie", label: "Movie" },
+  { value: "series", label: "Series" },
+  { value: "episode", label: "Episode" },
 ] as const;
 
 export const TypeFilter = ({ selectedType, onChange }: TypeFilterProps) => {
@@ -35,12 +35,12 @@ export const TypeFilter = ({ selectedType, onChange }: TypeFilterProps) => {
   const selectedLabel = mediaTypes.find((t) => t.value === selectedType)?.label;
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative w-full sm:w-36" ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-36 pl-4 pr-10 py-2 rounded-lg border border-gray-300 
-        bg-white text-left text-gray-700 cursor-pointer hover:border-gray-400 
+        className="w-full pl-4 pr-10 py-3 rounded-lg bg-gray-800 border border-gray-700 
+        text-white text-left cursor-pointer hover:border-gray-600 
         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
         transition-colors"
       >
@@ -59,15 +59,15 @@ export const TypeFilter = ({ selectedType, onChange }: TypeFilterProps) => {
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 w-36 mt-1 bg-white rounded-lg shadow-lg border border-gray-200">
+        <div className="absolute z-10 w-full sm:w-36 mt-1 bg-gray-800 rounded-lg shadow-lg border border-gray-700">
           <div className="py-1">
             {mediaTypes.map(({ value, label }) => (
               <button
                 key={value}
-                className={`w-full px-4 py-2 text-left hover:bg-gray-100 ${
+                className={`w-full px-4 py-2 text-left hover:bg-gray-700 ${
                   selectedType === value
                     ? "text-blue-500 font-medium"
-                    : "text-gray-700"
+                    : "text-gray-300"
                 }`}
                 onClick={() => {
                   onChange(value as MediaType | "");
