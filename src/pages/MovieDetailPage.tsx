@@ -7,6 +7,7 @@ import { MovieDetailLine } from '../components/MovieDetailLine'
 import { MovieRating } from '../components/MovieRating'
 import { useAppDispatch, useAppSelector } from '../store'
 import { getMovieDetail, selectMovie } from '../store/slices/movieSlice'
+import { movieDetailLines } from '../constants/movieDetail'
 
 export const MovieDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -62,14 +63,13 @@ export const MovieDetailPage = () => {
             )}
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4'>
-              <MovieDetailLine label='Director' value={selectedMovie.Director} />
-              <MovieDetailLine label='Writer' value={selectedMovie.Writer} />
-              <MovieDetailLine label='Cast' value={selectedMovie.Actors} />
-              <MovieDetailLine label='Genre' value={selectedMovie.Genre} />
-              <MovieDetailLine label='Country' value={selectedMovie.Country} />
-              <MovieDetailLine label='Language' value={selectedMovie.Language} />
-              <MovieDetailLine label='Awards' value={selectedMovie.Awards} />
-              <MovieDetailLine label='Box Office' value={selectedMovie.BoxOffice} />
+              {movieDetailLines.map(line => (
+                <MovieDetailLine
+                  key={line.label}
+                  label={line.label}
+                  value={selectedMovie[line.value] as string}
+                />
+              ))}
             </div>
 
             <MovieRating ratings={selectedMovie.Ratings} />
