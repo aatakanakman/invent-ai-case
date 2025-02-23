@@ -2,6 +2,8 @@
 
 A modern movie search application built with React and powered by the OMDb API. This application allows users to search for movies and TV shows, view detailed information, and apply various filters.
 
+🔗 **Live Demo:** [https://inventai.aatakan.dev/](https://inventai.aatakan.dev/)
+
 ## Features ✨
 
 - Search for movies and TV shows
